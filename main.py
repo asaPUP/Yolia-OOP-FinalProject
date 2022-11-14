@@ -2,7 +2,7 @@ import pygame
 from jugador import Jugador
 from pared import Pared
 from meta import Meta
-from picos import Picos
+from pico import Pico
 from movil import Movil
 from sys import exit
 
@@ -171,10 +171,10 @@ while True:
 
         # MANTENERLOS AL FINAL DEL CICLO
         player1.draw(WIN)
-        player1.update()
+        player1.animationState()
         
         player2.draw(WIN)
-        player2.update()
+        player2.animationState()
 
         text_font = pygame.font.Font('fonts/I-pixel-u.ttf', 60)
         text_surface = text_font.render('YOLIA', False, 'Black')
@@ -283,11 +283,11 @@ while True:
 
             #PICOS
             picos.empty()
-            picos.add(Picos(20 + (64 * 2) - 32, 60 + (64 * 5), 'enredadera', dalt))
-            picos.add(Picos(20 + (64 * 1) - 32, 60 + (64 * 6), 'enredadera', dalt))
+            picos.add(Pico(20 + (64 * 2) - 32, 60 + (64 * 5), 'enredadera', dalt))
+            picos.add(Pico(20 + (64 * 1) - 32, 60 + (64 * 6), 'enredadera', dalt))
 
-            picos.add(Picos(616 + (64 * 1) - 32, 60 + (64 * 1), 'rosales', dalt))
-            picos.add(Picos(616 + (64 * 3) - 32, 60 + (64 * 2), 'rosales', dalt))
+            picos.add(Pico(616 + (64 * 1) - 32, 60 + (64 * 1), 'rosales', dalt))
+            picos.add(Pico(616 + (64 * 3) - 32, 60 + (64 * 2), 'rosales', dalt))
 
             #MOVILES
             movil1 = Movil(20 + (64 * 6) - 32, 60 + (64 * 5), 'escultura')

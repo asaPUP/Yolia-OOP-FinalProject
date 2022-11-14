@@ -1,82 +1,70 @@
 import pygame
+from obstaculo import Obstaculo
 
-class Movil(pygame.sprite.Sprite):
-    def __init__(self, x, y,tipo):
+class Movil(Obstaculo):
+    def __init__(self):
         super().__init__()
+        
+        self._start_x = self._x
+        self._start_y = self._y
 
-        self.x = x
-        self.y = y
+        if self._tipo == 1:
+            self._image = pygame.image.load('assets/Escultura/escultura.png').convert_alpha() # Carga imagen
+            self._image = pygame.transform.scale2x(self._image) # Escala imagen a 2x
 
-        self.start_x = x
-        self.start_y = y
+        else:
+            self._image = pygame.image.load('assets/Estatuas/estatua.png').convert_alpha() # Carga imagen
+            self._image = pygame.transform.scale2x(self._image) # Escala imagen a 2x
 
-        self.tipo = tipo
+        self._rect = self._image.get_rect(midbottom = (self._x, self._y))
 
-        if self.tipo=='estatua': #estatua es un obtaculo del cielo que reduce vida 
-            self.image = pygame.image.load('assets/Estatuas/estatua.png').convert_alpha() # Carga imagen
-            self.image = pygame.transform.scale2x(self.image) # Escala imagen a 2x
-
-        elif self.tipo=='escultura': #escultura es obstaculo del mictlan que reduce vida 
-            self.image = pygame.image.load('assets/Escultura/escultura.png').convert_alpha() # Carga imagen
-            self.image = pygame.transform.scale2x(self.image) # Escala imagen a 2x
-
-        self.rect = self.image.get_rect(midbottom = (self.x, self.y))
+    def collision(self, jugador):
+        if self._rect.colliderect(jugador._rect):
+            return True
     
     def mover(self, pos_anterior):
-        if pos_anterior[1] > self.rect.y:
+        if pos_anterior[1] > self._rect.y:
             #ABAJO A ARRIBA
-            print('======= IF UNO =======')
-            print("pos anterior[1]: ", pos_anterior[1])
-            print("pos actual y: ", self.rect.y)
-            self.rect.y -= 64
+            self._rect.y -= 64
             
-        elif pos_anterior[1] < self.rect.y:
+        elif pos_anterior[1] < self._rect.y:
             #ARRIBA A ABAJO
-            print('======= IF DOS =======')
-            print("pos anterior[1]: ", pos_anterior[1])
-            print("pos actual y: ", self.rect.y)
-            self.rect.y += 64
+            self._rect.y += 64
 
-        elif pos_anterior[0] > self.rect.x:
+        elif pos_anterior[0] > self._rect.x:
             #DERECHA A IZQUIERDA
-            print('======= IF TRES =======')
-            print("pos anterior[0]: ", pos_anterior[0])
-            print("pos actual: x", self.rect.x)
-            self.rect.x -= 64
+            self._rect.x -= 64
 
-        elif pos_anterior[0] < self.rect.x:
+        elif pos_anterior[0] < self._rect.x:
             #EMPUJA A LA DERECHA
-            print('======= IF CUATRO =======')
-            print("pos anterior[0]: ", pos_anterior[0])
-            print("pos actualx: ", self.rect.x)
-            self.rect.x += 64
+            self._rect.x += 64
 
         ############LIMITES############
-        if self.tipo == 'escultura':
-            if self.rect.x  > 532:
-                self.rect.x = 532
-            if self.rect.x  < 20:
-                self.rect.x = 20
-            if self.rect.y  > 572:
-                self.rect.y = 572
-            if self.rect.y  < 60:
-                self.rect.y = 60
+        if self._tipo == 1:
+            if self._rect.x  > 1128:
+                self._rect.x = 1128
 
-        if self.tipo == 'estatua':
-            if self.rect.x  > 1128:
-                self.rect.x = 1128
-            if self.rect.x  < 616:
-                self.rect.x = 616
-            if self.rect.y  > 572:
-                self.rect.y = 572
-            if self.rect.y  < 60:
-                self.rect.y = 60
+            if self._rect.x  < 616:
+                self._rect.x = 616
 
-    def collision_object(self, object):
-        if self.rect.colliderect(object.rect):
-            return True
+            if self._rect.y  > 572:
+                self._rect.y = 572
+
+            if self._rect.y  < 60:
+                self._rect.y = 60
+        
         else:
-            return False
+            if self._rect.x  > 532:
+                self._rect.x = 532
+
+            if self._rect.x  < 20:
+                self._rect.x = 20
+
+            if self._rect.y  > 572:
+                self._rect.y = 572
+                
+            if self._rect.y  < 60:
+                self._rect.y = 60
     
     def reiniciar(self):
-        self.rect = self.image.get_rect(midbottom = (self.start_x, self.start_y))
+        self._rect = self._image.get_rect(midbottom = (self._start_x, self._start_y))
