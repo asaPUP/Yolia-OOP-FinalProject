@@ -5,7 +5,9 @@ class Pico(Obstaculo):
     def __init__(self):
         super().__init__()
 
-        if self._tipo == 1:
+        self._tipo = "pico"
+
+        if self._religion == 1:
             self._image = pygame.image.load('assets/Enredaderas/enredadera.png').convert_alpha() # Carga imagen
             self._image = pygame.transform.scale2x(self.image) # Escala imagen a 2x
             

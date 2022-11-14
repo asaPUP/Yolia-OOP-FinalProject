@@ -1,5 +1,6 @@
 import pygame
 from jugador import Jugador
+from obstaculo import Obstaculo
 from pared import Pared
 from meta import Meta
 from pico import Pico
@@ -8,11 +9,7 @@ from sys import exit
 
 pygame.init()
 
-#=================== DALTONISMO SI O NO ===================#
-dalt = False
 menu = True
-#==========================================================#
-
 
 WIDTH, HEIGHT = 1212, 656
 WIN = pygame.display.set_mode((WIDTH,HEIGHT))
@@ -29,14 +26,6 @@ pygame.mixer.music.play(-1)
 
 start_time = 0
 
-#=================== GRUPOS
-#PLAYERS
-player1 = pygame.sprite.GroupSingle()
-player1.add(Jugador(dalt, 'mexica'))
-
-player2 = pygame.sprite.GroupSingle()
-player2.add(Jugador(dalt, 'cristiano'))
-
 #FONDOS
 fondo_surface = pygame.image.load('assets/Fondos/FondoMarco.png').convert()
 fondo_surface = pygame.transform.scale2x(fondo_surface)
@@ -45,6 +34,40 @@ fondo_surface = pygame.transform.scale2x(fondo_surface)
 titulo_surface = pygame.image.load("assets/fondo.png").convert()
 nombre_surface = pygame.image.load("assets/Titulo.png").convert()
 nombre_surface = pygame.transform.scale2x(nombre_surface)
+
+#=================== GRUPOS
+#PLAYERS
+player1 = pygame.sprite.GroupSingle()
+player1.add(Jugador(1))
+
+player2 = pygame.sprite.GroupSingle()
+player2.add(Jugador(2))
+
+obstaculos = pygame.sprite.Group()
+obstaculos.add(Meta(-64, -64, 1))
+obstaculos.add(Meta(-64, -64, 2))
+obstaculos.add(Pared(-64, -64, 1))
+obstaculos.add(Pared(-64, -64, 2))
+obstaculos.add(Pico(-64, -64, 1))
+obstaculos.add(Pico(-64, -64, 2))
+obstaculos.add(Movil(-64, -64, 1))
+obstaculos.add(Movil(-64, -64, 2))
+
+"""
+#METAS FALSAS
+meta1 = Meta(-64, -64)
+meta2 = Meta(-64, -64)
+
+#PAREDES FALSAS
+paredes = pygame.sprite.Group()
+
+#PICOS FALSOS 
+picos = pygame.sprite.Group()
+
+#MOVILES FALSOS
+movil1 = Movil(-64, -64, 'escultura')
+movil2 = Movil(-64, -64, 'estatua')
+"""
 
 ##==========================================BORRAR POR SI ACASO=================================================#
 while menu == True:
@@ -63,28 +86,8 @@ while menu == True:
                 game_active = True
                 nivel = 1
                 break
-            if event.key == pygame.K_d:
-                dalt = True
-                menu = False
-                game_active = True
-                nivel = 1
-                break
 
 ##===========================================================================================#
-
-#METAS FALSAS
-meta1 = Meta(-64, -64)
-meta2 = Meta(-64, -64)
-
-#PAREDES FALSAS
-paredes = pygame.sprite.Group()
-
-#PICOS FALSOS 
-picos = pygame.sprite.Group()
-
-#MOVILES FALSOS
-movil1 = Movil(-64, -64, 'escultura')
-movil2 = Movil(-64, -64, 'estatua')
 
 nivel = 0
 game_active = False
@@ -142,7 +145,7 @@ while True:
         paredes.draw(WIN)
 
         #DETECTA SI LLEGA A LA META
-        if (player1.sprite.llega_meta(meta1) and player2.sprite.llega_meta(meta2)):
+        if (player1.sprite.llega_meta(obstaculos) and player2.sprite.llega_meta(meta2)):
             llego = True
             contador_fin += 1
 
@@ -171,10 +174,10 @@ while True:
 
         # MANTENERLOS AL FINAL DEL CICLO
         player1.draw(WIN)
-        player1.animationState()
+        player1.animation_state()
         
         player2.draw(WIN)
-        player2.animationState()
+        player2.animation_state()
 
         text_font = pygame.font.Font('fonts/I-pixel-u.ttf', 60)
         text_surface = text_font.render('YOLIA', False, 'Black')
@@ -192,8 +195,8 @@ while True:
         player1.remove(player1.sprite)
         player2.remove(player2.sprite)
         
-        player1.add(Jugador(dalt, 'mexica'))
-        player2.add(Jugador(dalt, 'cristiano'))
+        player1.add(Jugador('mexica'))
+        player2.add(Jugador('cristiano'))
 
         if nivel == 1:
             #METAS
@@ -283,11 +286,11 @@ while True:
 
             #PICOS
             picos.empty()
-            picos.add(Pico(20 + (64 * 2) - 32, 60 + (64 * 5), 'enredadera', dalt))
-            picos.add(Pico(20 + (64 * 1) - 32, 60 + (64 * 6), 'enredadera', dalt))
+            picos.add(Pico(20 + (64 * 2) - 32, 60 + (64 * 5), 'enredadera'))
+            picos.add(Pico(20 + (64 * 1) - 32, 60 + (64 * 6), 'enredadera'))
 
-            picos.add(Pico(616 + (64 * 1) - 32, 60 + (64 * 1), 'rosales', dalt))
-            picos.add(Pico(616 + (64 * 3) - 32, 60 + (64 * 2), 'rosales', dalt))
+            picos.add(Pico(616 + (64 * 1) - 32, 60 + (64 * 1), 'rosales'))
+            picos.add(Pico(616 + (64 * 3) - 32, 60 + (64 * 2), 'rosales'))
 
             #MOVILES
             movil1 = Movil(20 + (64 * 6) - 32, 60 + (64 * 5), 'escultura')

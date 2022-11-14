@@ -1,7 +1,7 @@
 import pygame
 
 class Jugador(pygame.sprite.Sprite):
-    def __init__(self, dalt, religion):
+    def __init__(self, religion):
         super().__init__()
 
         self._religion = religion
@@ -13,11 +13,8 @@ class Jugador(pygame.sprite.Sprite):
             self._x = 904
             self._y = 380
 
-        self._frames = []
-        self._frame_index = 0
-
         #==================== MEXICA ====================#
-        if self._religion == 'mexica':
+        if self._religion == 1:
             jugador1 = pygame.transform.scale2x(pygame.image.load('assets/uglyAssMofo2/Canek1.png').convert_alpha())
             jugador2 = pygame.transform.scale2x(pygame.image.load('assets/uglyAssMofo2/Canek2.png').convert_alpha())
             jugador3 = pygame.transform.scale2x(pygame.image.load('assets/uglyAssMofo2/Canek3.png').convert_alpha())
@@ -28,7 +25,7 @@ class Jugador(pygame.sprite.Sprite):
             jugador8 = pygame.transform.scale2x(pygame.image.load('assets/uglyAssMofo2/Canek8.png').convert_alpha())
 
         #=================== CRISTIANO ===================#
-        elif self._religion == 'cristiano' :
+        else:
             jugador1 = pygame.transform.scale2x(pygame.image.load('assets/uglyAssMofo/Sprite-0004.png').convert_alpha())
             jugador2 = pygame.transform.scale2x(pygame.image.load('assets/uglyAssMofo/Sprite-0005.png').convert_alpha())
             jugador3 = pygame.transform.scale2x(pygame.image.load('assets/uglyAssMofo/Sprite-0006.png').convert_alpha())
@@ -38,40 +35,36 @@ class Jugador(pygame.sprite.Sprite):
             jugador7 = pygame.transform.scale2x(pygame.image.load('assets/uglyAssMofo/Sprite-0010.png').convert_alpha())
             jugador8 = pygame.transform.scale2x(pygame.image.load('assets/uglyAssMofo/Sprite-0011.png').convert_alpha())
         
-        self._jugadorWalk = [jugador1, jugador2, jugador3, jugador4, jugador5, jugador6, jugador7, jugador8]
+        self._jugador_walk = [jugador1, jugador2, jugador3, jugador4, jugador5, jugador6, jugador7, jugador8]
         
         self._jugador_index = 0
         self._image = self.jugadorWalk[self._jugador_index]
         self._rect = self._image.get_rect(midbottom = (self._x, self._y))
 
-    def animationState(self):
+    def animation_state(self):
         self.jugador_index += 0.1
         if self.jugador_index >= len(self.jugadorWalk):
             self.jugador_index = 0
         self.image = self.jugadorWalk[int(self.jugador_index)]
     
     @staticmethod
-    def playerInput(event, player1, player2):
+    def player_input(event, player1, player2):
 
         #=================== MOVIMIENTO ===================#
 
         if event.key == pygame.K_DOWN:
-            print('down')
             player1.sprite.rect._y += 64
             player2.sprite.rect._y += 64
 
         if event.key == pygame.K_UP:
-            print('up')
             player1.sprite.rect._y -= 64
             player2.sprite.rect._y -= 64
 
         if event.key == pygame.K_LEFT:
-            print('left')
             player1.sprite.rect._x -= 64
             player2.sprite.rect._x -= 64
 
         if event.key == pygame.K_RIGHT:
-            print('right')
             player1.sprite.rect._x += 64
             player2.sprite.rect._x += 64
         
