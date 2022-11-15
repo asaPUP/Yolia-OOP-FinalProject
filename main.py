@@ -1,15 +1,18 @@
 import pygame
 from jugador import Jugador
 from obstaculo import Obstaculo
+from nivel import Nivel
+
 from pared import Pared
 from meta import Meta
 from pico import Pico
 from movil import Movil
+
 from sys import exit
 
-pygame.init()
+##========================================# INICIALIZACION #================================================#
 
-menu = True
+pygame.init()
 
 WIDTH, HEIGHT = 1212, 656
 WIN = pygame.display.set_mode((WIDTH,HEIGHT))
@@ -18,61 +21,27 @@ pygame.display.set_caption("YOLIA")
 
 clock = pygame.time.Clock()
 
-text_font = pygame.font.Font('fonts/I-pixel-u.ttf', 64)
+##========================================# MUSICA #========================================================#
 
 pygame.mixer.init()
 pygame.mixer.music.load("music/musica.wav")
 pygame.mixer.music.play(-1)
 
-start_time = 0
+##========================================# CARGA DE FUENTE Y FONDO #=======================================#
 
-#FONDOS
+text_font = pygame.font.Font('fonts/I-pixel-u.ttf', 64)
 fondo_surface = pygame.image.load('assets/Fondos/FondoMarco.png').convert()
 fondo_surface = pygame.transform.scale2x(fondo_surface)
 
-#MENU
+##========================================# PANTALLA DE TITULO #============================================#
+
 titulo_surface = pygame.image.load("assets/fondo.png").convert()
 nombre_surface = pygame.image.load("assets/Titulo.png").convert()
 nombre_surface = pygame.transform.scale2x(nombre_surface)
 
-#=================== GRUPOS
-#PLAYERS
-player1 = pygame.sprite.GroupSingle()
-player1.add(Jugador(1))
+menu = True
 
-player2 = pygame.sprite.GroupSingle()
-player2.add(Jugador(2))
-
-obstaculos = pygame.sprite.Group()
-obstaculos.add(Meta(-64, -64, 1))
-obstaculos.add(Meta(-64, -64, 2))
-obstaculos.add(Pared(-64, -64, 1))
-obstaculos.add(Pared(-64, -64, 2))
-obstaculos.add(Pico(-64, -64, 1))
-obstaculos.add(Pico(-64, -64, 2))
-obstaculos.add(Movil(-64, -64, 1))
-obstaculos.add(Movil(-64, -64, 2))
-
-"""
-#METAS FALSAS
-meta1 = Meta(-64, -64)
-meta2 = Meta(-64, -64)
-
-#PAREDES FALSAS
-paredes = pygame.sprite.Group()
-
-#PICOS FALSOS 
-picos = pygame.sprite.Group()
-
-#MOVILES FALSOS
-movil1 = Movil(-64, -64, 'escultura')
-movil2 = Movil(-64, -64, 'estatua')
-"""
-
-##==========================================BORRAR POR SI ACASO=================================================#
 while menu == True:
-        
-    #create menu
     WIN.blit(titulo_surface, (0,0))
     WIN.blit(nombre_surface, (200,50))
     pygame.display.update()
@@ -84,17 +53,28 @@ while menu == True:
             if event.key == pygame.K_SPACE:
                 menu = False
                 game_active = True
-                nivel = 1
+                cont_nivel = 1
                 break
 
-##===========================================================================================#
+##========================================# PLAYERS #======================================================#
 
-nivel = 0
+player1 = pygame.sprite.GroupSingle()
+player1.add(Jugador(1))
+
+player2 = pygame.sprite.GroupSingle()
+player2.add(Jugador(2))
+
+##=======================================# CONTADORES Y LIMITANTES #=======================================#
+
+cont_nivel = 0
+nivel = Nivel()
 game_active = False
 contador_fin = 0
 llego = False
 
 WIN.blit(nombre_surface, (200,50))
+
+##========================================# LOOP DEL JUEGO #===============================================#
 
 while True:
     for event in pygame.event.get(): 
@@ -187,7 +167,7 @@ while True:
 
     else:
         game_active = True
-        nivel += 1
+        cont_nivel += 1
         contador_fin = 0
         llego = False
 
@@ -195,108 +175,18 @@ while True:
         player1.remove(player1.sprite)
         player2.remove(player2.sprite)
         
-        player1.add(Jugador('mexica'))
-        player2.add(Jugador('cristiano'))
+        player1.add(Jugador(1))
+        player2.add(Jugador(2))
 
-        if nivel == 1:
-            #METAS
-            meta1 = Meta(20 + (64 * 8) - 32, 60 + (64 * 9))
-
-            meta2 = Meta(616 + (64 * 8) - 32, 60 + (64 * 9))
-
-        if nivel == 2:
-            #METAS
-            meta1 = Meta(20 + (64 * 2) - 32, 60 + (64 * 2))
-
-            meta2 = Meta(616 + (64 * 9) - 32, 60 + (64 * 1))
-
-            #PAREDES
-            paredes.empty()
-            paredes.add(Pared(20 + (64 * 4) - 32, 60 + (64 * 5), 'piedra'))
-            paredes.add(Pared(20 + (64 * 4) - 32, 60 + (64 * 6), 'piedra'))
-            paredes.add(Pared(20 + (64 * 5) - 32, 60 + (64 * 6), 'piedra'))
-            paredes.add(Pared(20 + (64 * 6) - 32, 60 + (64 * 6), 'piedra'))
-            paredes.add(Pared(20 + (64 * 6) - 32, 60 + (64 * 5), 'piedra'))
-            paredes.add(Pared(20 + (64 * 2) - 32, 60 + (64 * 1), 'piedra'))
-            paredes.add(Pared(20 + (64 * 1) - 32, 60 + (64 * 2), 'piedra'))
-
-            paredes.add(Pared(616 + (64 * 4) - 32, 60 + (64 * 5), 'hoyo'))
-            paredes.add(Pared(616 + (64 * 4) - 32, 60 + (64 * 4), 'hoyo'))
-            paredes.add(Pared(616 + (64 * 5) - 32, 60 + (64 * 4), 'hoyo'))
-            paredes.add(Pared(616 + (64 * 6) - 32, 60 + (64 * 4), 'hoyo'))
-            paredes.add(Pared(616 + (64 * 6) - 32, 60 + (64 * 5), 'hoyo'))
-            paredes.add(Pared(616 + (64 * 8) - 32, 60 + (64 * 4), 'hoyo'))
-            paredes.add(Pared(616 + (64 * 8) - 32, 60 + (64 * 1), 'hoyo'))
-
-        if nivel == 3:
-            #METAS
-            meta1 = Meta(20 + (64 * 2) - 32, 60 + (64 * 2))
-
-            meta2 = Meta(616 + (64 * 8) - 32, 60 + (64 * 8))
-
-            #PAREDES
-            paredes.empty()
-            paredes.add(Pared(20 + (64 * 4) - 32, 60 + (64 * 6), 'piedra'))
-            paredes.add(Pared(20 + (64 * 4) - 32, 60 + (64 * 7), 'piedra'))
-            paredes.add(Pared(20 + (64 * 4) - 32, 60 + (64 * 8), 'piedra'))
-            paredes.add(Pared(20 + (64 * 4) - 32, 60 + (64 * 9), 'piedra'))
-            paredes.add(Pared(20 + (64 * 5) - 32, 60 + (64 * 4), 'piedra'))
-            paredes.add(Pared(20 + (64 * 6) - 32, 60 + (64 * 6), 'piedra'))
-            paredes.add(Pared(20 + (64 * 6) - 32, 60 + (64 * 3), 'piedra'))
-            paredes.add(Pared(20 + (64 * 6) - 32, 60 + (64 * 2), 'piedra'))
-            paredes.add(Pared(20 + (64 * 3) - 32, 60 + (64 * 2), 'piedra'))
-            paredes.add(Pared(20 + (64 * 1) - 32, 60 + (64 * 4), 'piedra'))
-
-            paredes.add(Pared(616 + (64 * 4) - 32, 60 + (64 * 4), 'hoyo'))
-            paredes.add(Pared(616 + (64 * 4) - 32, 60 + (64 * 3), 'hoyo'))
-            paredes.add(Pared(616 + (64 * 4) - 32, 60 + (64 * 2), 'hoyo'))
-            paredes.add(Pared(616 + (64 * 6) - 32, 60 + (64 * 4), 'hoyo'))
-            paredes.add(Pared(616 + (64 * 6) - 32, 60 + (64 * 1), 'hoyo'))
-            paredes.add(Pared(616 + (64 * 1) - 32, 60 + (64 * 6), 'hoyo'))
-            paredes.add(Pared(616 + (64 * 2) - 32, 60 + (64 * 6), 'hoyo'))
-            paredes.add(Pared(616 + (64 * 3) - 32, 60 + (64 * 6), 'hoyo'))
-            paredes.add(Pared(616 + (64 * 7) - 32, 60 + (64 * 5), 'hoyo'))
-            paredes.add(Pared(616 + (64 * 6) - 32, 60 + (64 * 6), 'hoyo'))
-            paredes.add(Pared(616 + (64 * 8) - 32, 60 + (64 * 3), 'hoyo'))
-            paredes.add(Pared(616 + (64 * 7) - 32, 60 + (64 * 7), 'hoyo'))
-            paredes.add(Pared(616 + (64 * 7) - 32, 60 + (64 * 9), 'hoyo'))
-            paredes.add(Pared(616 + (64 * 8) - 32, 60 + (64 * 7), 'hoyo'))
-
-        if nivel == 4:
-            #METAS
-            meta1 = Meta(20 + (64 * 3) - 32, 60 + (64 * 5))
-
-            meta2 = Meta(616 + (64 * 2) - 32, 60 + (64 * 1))
-
-            #PAREDES
-            paredes.empty()
-            paredes.add(Pared(20 + (64 * 4) - 32, 60 + (64 * 5), 'piedra'))
-            paredes.add(Pared(20 + (64 * 5) - 32, 60 + (64 * 4), 'piedra'))
-            paredes.add(Pared(20 + (64 * 5) - 32, 60 + (64 * 6), 'piedra'))
-            paredes.add(Pared(20 + (64 * 3) - 32, 60 + (64 * 7), 'piedra'))
-            paredes.add(Pared(20 + (64 * 5) - 32, 60 + (64 * 1), 'piedra'))
-            paredes.add(Pared(20 + (64 * 7) - 32, 60 + (64 * 2), 'piedra'))
-
-            paredes.add(Pared(616 + (64 * 4) - 32, 60 + (64 * 5), 'hoyo'))
-            paredes.add(Pared(616 + (64 * 6) - 32, 60 + (64 * 5), 'hoyo'))
-            paredes.add(Pared(616 + (64 * 5) - 32, 60 + (64 * 6), 'hoyo'))
-            paredes.add(Pared(616 + (64 * 9) - 32, 60 + (64 * 7), 'hoyo'))
-            paredes.add(Pared(616 + (64 * 7) - 32, 60 + (64 * 7), 'hoyo'))
-            paredes.add(Pared(616 + (64 * 1) - 32, 60 + (64 * 2), 'hoyo'))
-
-            #PICOS
-            picos.empty()
-            picos.add(Pico(20 + (64 * 2) - 32, 60 + (64 * 5), 'enredadera'))
-            picos.add(Pico(20 + (64 * 1) - 32, 60 + (64 * 6), 'enredadera'))
-
-            picos.add(Pico(616 + (64 * 1) - 32, 60 + (64 * 1), 'rosales'))
-            picos.add(Pico(616 + (64 * 3) - 32, 60 + (64 * 2), 'rosales'))
-
-            #MOVILES
-            movil1 = Movil(20 + (64 * 6) - 32, 60 + (64 * 5), 'escultura')
-            movil2 = Movil(616 + (64 * 5) - 32, 60 + (64 * 4), 'estatua')
-        
-        if nivel == 5:
+        if cont_nivel == 1:
+            nivel.cont_nivel1()
+        if cont_nivel == 2:
+            nivel.cont_nivel2()
+        if cont_nivel == 3:
+            nivel.cont_nivel3()
+        if cont_nivel == 4:
+            nivel.cont_nivel4()
+        if cont_nivel == 5:
             WIN.blit(titulo_surface, (0,0))
 
     pygame.display.update()

@@ -49,9 +49,7 @@ class Jugador(pygame.sprite.Sprite):
     
     @staticmethod
     def player_input(event, player1, player2):
-
         #=================== MOVIMIENTO ===================#
-
         if event.key == pygame.K_DOWN:
             player1.sprite.rect._y += 64
             player2.sprite.rect._y += 64
@@ -78,6 +76,7 @@ class Jugador(pygame.sprite.Sprite):
             player2.sprite.rect._y = 572 
         if player2.sprite.rect._y  < 60:
             player2.sprite.rect._y = 60
+            
         #=================== LIMITES PARA X ===================#
         if player1.sprite.rect._x  > 532:
             player1.sprite.rect._x = 532
