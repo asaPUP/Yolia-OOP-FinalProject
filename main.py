@@ -1,12 +1,6 @@
 import pygame
 from jugador import Jugador
-from obstaculo import Obstaculo
 from nivel import Nivel
-
-from pared import Pared
-from meta import Meta
-from pico import Pico
-from movil import Movil
 
 from sys import exit
 
@@ -66,10 +60,12 @@ player2.add(Jugador(2))
 
 ##=======================================# CONTADORES Y LIMITANTES #=======================================#
 
-cont_nivel = 0
 nivel = Nivel()
-game_active = False
+
+cont_nivel = 0
 contador_fin = 0
+
+game_active = False
 llego = False
 
 WIN.blit(nombre_surface, (200,50))
@@ -172,11 +168,15 @@ while True:
         llego = False
 
         #PLAYERS
+        """ # CREO QUE ESTO SOBRA
         player1.remove(player1.sprite)
         player2.remove(player2.sprite)
-        
         player1.add(Jugador(1))
         player2.add(Jugador(2))
+        """
+
+        player1.sprite.restart()
+        player2.sprite.restart()
 
         if cont_nivel == 1:
             nivel.cont_nivel1()

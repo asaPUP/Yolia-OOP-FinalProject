@@ -13,6 +13,9 @@ class Jugador(pygame.sprite.Sprite):
             self._x = 904
             self._y = 380
 
+        self.cargar_imagen()
+
+    def cargar_imagen(self):
         #==================== MEXICA ====================#
         if self._religion == 1:
             jugador1 = pygame.transform.scale2x(pygame.image.load('assets/uglyAssMofo2/Canek1.png').convert_alpha())
@@ -48,7 +51,7 @@ class Jugador(pygame.sprite.Sprite):
         self.image = self.jugadorWalk[int(self.jugador_index)]
     
     @staticmethod
-    def player_input(event, player1, player2):
+    def player_input(event, player1, player2):                      # Metodo estatic para recobor movimiento del jugadoro
         #=================== MOVIMIENTO ===================#
         if event.key == pygame.K_DOWN:
             player1.sprite.rect._y += 64
@@ -76,7 +79,7 @@ class Jugador(pygame.sprite.Sprite):
             player2.sprite.rect._y = 572 
         if player2.sprite.rect._y  < 60:
             player2.sprite.rect._y = 60
-            
+
         #=================== LIMITES PARA X ===================#
         if player1.sprite.rect._x  > 532:
             player1.sprite.rect._x = 532
@@ -87,21 +90,9 @@ class Jugador(pygame.sprite.Sprite):
             player2.sprite.rect._x = 1128 
         if player2.sprite.rect._x  < 616:
             player2.sprite.rect._x = 616
-    
-    def llega_meta(self, meta):
-        if self.rect.colliderect(meta.rect):
-            return True
-        else:
-            return False
-
-    def collision(self, objetos):
-        if self.rect.colliderect(objetos.rect):
-            return True
-        else:
-            return False
 
     def restart(self):
-        if self._religion == 'mexica':
+        if self._religion == 1:
             self.rect = self.image.get_rect(midbottom = (308, 380))
         else:
             self.rect = self.image.get_rect(midbottom = (904, 380))

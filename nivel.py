@@ -9,8 +9,8 @@ class Nivel(object):
         self._paredes = pygame.sprite.Group()
         self._metas = pygame.sprite.Group()
         self._picos = pygame.sprite.Group()
-        self._movil1 = pygame.sprite.GroupSingle()
-        self._movil2 = pygame.sprite.GroupSingle()
+        self._movil1 = pygame.sprite.GroupSingle()  # El moimiento es indepentiente por cada objeto, debe de estar en un grupo unico
+        self._movil2 = pygame.sprite.GroupSingle()  # ^^^
 
     @property
     def paredes(self):

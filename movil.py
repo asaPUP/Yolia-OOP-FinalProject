@@ -10,34 +10,32 @@ class Movil(Obstaculo):
         self._start_x = self._x
         self._start_y = self._y
 
+        self.cargar_imagen()
+
+    def cargar_imagen(self):                # Sobreescritura polimorfica del metodo abstracto
         if self._religion == 1:
             self._image = pygame.image.load('assets/Escultura/escultura.png').convert_alpha() # Carga imagen
             self._image = pygame.transform.scale2x(self._image) # Escala imagen a 2x
-
         else:
             self._image = pygame.image.load('assets/Estatuas/estatua.png').convert_alpha() # Carga imagen
             self._image = pygame.transform.scale2x(self._image) # Escala imagen a 2x
 
         self._rect = self._image.get_rect(midbottom = (self._x, self._y))
-
-    def collision(self, jugador):
-        if self._rect.colliderect(jugador._rect):
-            return True
     
-    def mover(self, pos_anterior):
-        if pos_anterior[1] > self._rect.y:
+    def mover(self, pos_ant_jugador):
+        if pos_ant_jugador[1] > self._rect.y:
             #ABAJO A ARRIBA
             self._rect.y -= 64
             
-        elif pos_anterior[1] < self._rect.y:
+        elif pos_ant_jugador[1] < self._rect.y:
             #ARRIBA A ABAJO
             self._rect.y += 64
 
-        elif pos_anterior[0] > self._rect.x:
+        elif pos_ant_jugador[0] > self._rect.x:
             #DERECHA A IZQUIERDA
             self._rect.x -= 64
 
-        elif pos_anterior[0] < self._rect.x:
+        elif pos_ant_jugador[0] < self._rect.x:
             #EMPUJA A LA DERECHA
             self._rect.x += 64
 
