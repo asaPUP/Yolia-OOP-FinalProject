@@ -16,11 +16,11 @@ pygame.display.set_caption("YOLIA")
 clock = pygame.time.Clock()
 
 ##========================================# MUSICA #========================================================#
-
+"""
 pygame.mixer.init()
 pygame.mixer.music.load("music/musica.wav")
 pygame.mixer.music.play(-1)
-
+"""
 ##========================================# CARGA DE FUENTE Y FONDO #=======================================#
 
 text_font = pygame.font.Font('fonts/I-pixel-u.ttf', 64)
@@ -124,13 +124,12 @@ while True:
                             jugadores[0].sprite.restart() # Se reinicia la posicion de los jugadores
                             jugadores[1].sprite.restart()
 
-                            #Reiniciar la posicion de los moviles
-                            nivel.movil1.sprite.restart()
-                            nivel.movil2.sprite.restart()
-
-                            elementos[1].sprite.restart() # Se reinicia la posicion de los moviles
+                            # Reiniciar la posicion de los moviles
+                            """
+                            elementos[1].sprite.restart()
                             elementos[2].sprite.restart()
-        
+                            """
+
         """
         #=================== EMPUJAR MOVILES
         if(player1.sprite.collision(movil1)):
