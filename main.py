@@ -47,7 +47,7 @@ while menu == True:
             if event.key == pygame.K_SPACE:
                 menu = False
                 game_active = True
-                cont_nivel = 1
+                Nivel.cont_nivel = 1
                 break
 
 ##========================================# PLAYERS #======================================================#
@@ -68,7 +68,6 @@ nivel = Nivel()
 # Lista de objetos de diferentes clases (todos son grupo por necesidades de pygame, pero cada grupo tiene diferentes clases)
 elementos = [nivel.paredes, nivel.metas, nivel.picos, nivel.movil1, nivel.movil2] 
 
-cont_nivel = 0
 contador_fin = 0
 
 game_active = False
@@ -169,7 +168,7 @@ while True:
 
     else:
         game_active = True
-        cont_nivel += 1
+        Nivel.cont_nivel += 1
         contador_fin = 0
         llego = False
 
@@ -183,15 +182,15 @@ while True:
         for player in jugadores:
             player.sprite.restart()
 
-        if cont_nivel == 1:
+        if Nivel.cont_nivel == 1:
             nivel.nivel1()
-        if cont_nivel == 2:
+        if Nivel.cont_nivel == 2:
             nivel.nivel2()
-        if cont_nivel == 3:
+        if Nivel.cont_nivel == 3:
             nivel.nivel3()
-        if cont_nivel == 4:
+        if Nivel.cont_nivel == 4:
             nivel.nivel4()
-        if cont_nivel == 5:
+        if Nivel.cont_nivel == 5:
             WIN.blit(titulo_surface, (0,0))
 
     pygame.display.update()

@@ -5,6 +5,9 @@ from pico import Pico
 from movil import Movil
 
 class Nivel(object):                                # Clase compuesta por una lista de objetos de diferentes tipos, que instancian cada nivel
+    
+    cont_nivel = 0                                  # Variable estatica para el contador de niveles
+    
     def __init__(self):
         self._estaticos = pygame.sprite.Group()     # Grupo de objetos estaticos
 
