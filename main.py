@@ -16,11 +16,11 @@ pygame.display.set_caption("YOLIA")
 clock = pygame.time.Clock()
 
 ##========================================# MUSICA #========================================================#
-
+"""
 pygame.mixer.init()
 pygame.mixer.music.load("music/musica.wav")
 pygame.mixer.music.play(-1)
-
+"""
 ##========================================# CARGA DE FUENTE Y FONDO #=======================================#
 
 text_font = pygame.font.Font('fonts/I-pixel-u.ttf', 64)
@@ -124,31 +124,28 @@ while True:
                             jugadores[0].sprite.restart() # Se reinicia la posicion de los jugadores
                             jugadores[1].sprite.restart()
 
-                            #Reiniciar la posicion de los moviles
-                            nivel.movil1.sprite.restart()
-                            nivel.movil2.sprite.restart()
+                            # Reiniciar la posicion de los moviles
+                            if nivel.movil1 and nivel.movil2:
+                                elementos[1].sprite.restart()
+                                elementos[2].sprite.restart()
+            else:
+                #=================== EMPUJAR MOVILES
+                if nivel.movil1 and nivel.movil2:
+                    if(elementos[1].sprite.collision(jugadores[0].sprite)):
+                        elementos[1].sprite.mover(pos_ant1)
 
-                            elementos[1].sprite.restart() # Se reinicia la posicion de los moviles
-                            elementos[2].sprite.restart()
-        
-        """
-        #=================== EMPUJAR MOVILES
-        if(player1.sprite.collision(movil1)):
-            movil1.mover(pos_ant1)
+                        if (player1.sprite.rect.x + 64 > 532 or player1.sprite.rect.x - 64 < 20):
+                            player1.sprite.rect.x = pos_ant1[0]
+                        if (player1.sprite.rect.y + 64 > 572 or player1.sprite.rect.y - 64 < 60):
+                            player1.sprite.rect.y = pos_ant1[1]
 
-            if (player1.sprite.rect.x + 64 > 532 or player1.sprite.rect.x - 64 < 20):
-                player1.sprite.rect.x = pos_ant1[0]
-            if (player1.sprite.rect.y + 64 > 572 or player1.sprite.rect.y - 64 < 60):
-                player1.sprite.rect.y = pos_ant1[1]
+                    if(elementos[2].sprite.collision(jugadores[1].sprite)):
+                        elementos[2].sprite.mover(pos_ant2)
 
-        if(player2.sprite.collision(movil2)):
-            movil2.mover(pos_ant2)
-
-            if (player2.sprite.rect.x + 64 > 1128 or player2.sprite.rect.x - 64 < 616):
-                player2.sprite.rect.x = pos_ant2[0]
-            if (player2.sprite.rect.y + 64 > 572 or player2.sprite.rect.y - 64 < 60):
-                player2.sprite.rect.y = pos_ant2[1]
-        """
+                        if (player2.sprite.rect.x + 64 > 1128 or player2.sprite.rect.x - 64 < 616):
+                            player2.sprite.rect.x = pos_ant2[0]
+                        if (player2.sprite.rect.y + 64 > 572 or player2.sprite.rect.y - 64 < 60):
+                            player2.sprite.rect.y = pos_ant2[1]
 
         #=================== DIBUJA JUGADORES
         for player in jugadores:
