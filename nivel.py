@@ -17,15 +17,15 @@ class Nivel(object):                                # Clase compuesta por una li
     def estaticos(self):
         return self._estaticos
     
-    @property
+    @property                   # Getter de la lista singel del obstaculo movil 1
     def movil1(self):
         return self._movil1
 
     @property
-    def movil2(self):
+    def movil2(self):           # Getter de la lista singel del obstaculo movil 2
         return self._movil2
 
-    def nivel1(self):           # Definicion de cada uno de los 4 niveles, agregando elementos a la lista polimorfica de obstaculos
+    def nivel1(self):           # Definicion de cada uno de los obstaculos en los 4 niveles, agregando elementos a la lista polimorfica de obstaculos
         self._estaticos.empty()
 
         self._estaticos.add(Meta(20 + (64 * 8) - 32, 60 + (64 * 9), 1))

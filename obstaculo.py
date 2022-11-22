@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 
 class Obstaculo(pygame.sprite.Sprite, ABC):         # Clase abstracta que hereda de Sprite (pygame) y ABC, para definir diferentes obstaculos
     def __init__(self, x, y, religion):
-        super().__init__()
+        super().__init__()                          # Llama al constructor de las clases padres, Sprite y ABC (abstract base class)
 
         self._x = x                                 # Posicion en x de cada obstaculo
         self._y = y                                 # Posicion en y de cada obstaculo
@@ -19,13 +19,13 @@ class Obstaculo(pygame.sprite.Sprite, ABC):         # Clase abstracta que hereda
             return True
 
     @property
-    def tipo(self):
+    def tipo(self):                                 # Getter para el tipo de obstaculo
         return self._tipo
 
     @property
-    def image(self):
+    def image(self):                                # Getter para la imagen del obstaculo
         return self._image
 
     @property
-    def rect(self):
+    def rect(self):                                 # Getter para el rectangulo del obstaculo
         return self._rect

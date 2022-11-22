@@ -2,7 +2,7 @@ import pygame
 
 class Jugador(pygame.sprite.Sprite):        # Clase que hereda de Sprite (pygame) para definir a cada jugador
     def __init__(self, religion):
-        super().__init__()
+        super().__init__()                  # Inicializa la clase padre (Sprite)
 
         self._religion = religion           # Religion del jugador
 
@@ -13,11 +13,11 @@ class Jugador(pygame.sprite.Sprite):        # Clase que hereda de Sprite (pygame
             self._x = 904
             self._y = 380
 
-        self.cargar_imagen()                # Carga la imagen del jugador
+        self.cargar_imagen()                # Carga las imagenes del jugador
 
-    def cargar_imagen(self):                # Metodo para cargar la imagen al sprite, dependiendo de la religion del jugador
+    def cargar_imagen(self):                # Metodo para cargar la imagenes de la animacion del sprite, dependiendo de la religion del jugador
         #==================== MEXICA ====================#
-        if self._religion == 1: 
+        if self._religion == 1:
             jugador1 = pygame.transform.scale2x(pygame.image.load('assets/uglyAssMofo2/Canek1.png').convert_alpha())
             jugador2 = pygame.transform.scale2x(pygame.image.load('assets/uglyAssMofo2/Canek2.png').convert_alpha())
             jugador3 = pygame.transform.scale2x(pygame.image.load('assets/uglyAssMofo2/Canek3.png').convert_alpha())
@@ -40,11 +40,11 @@ class Jugador(pygame.sprite.Sprite):        # Clase que hereda de Sprite (pygame
         
         self._jugador_walk = [jugador1, jugador2, jugador3, jugador4, jugador5, jugador6, jugador7, jugador8]   # Lista con las imagenes del jugador (caminando)
         
-        self._jugador_index = 0                                 # Indice de la lista de imagenes del jugador
-        self._image = self._jugador_walk[self._jugador_index]     # Imagen actual del jugador
+        self._jugador_index = 0                                             # Indice de la lista de imagenes del jugador
+        self._image = self._jugador_walk[self._jugador_index]               # Imagen actual del jugador
         self._rect = self._image.get_rect(midbottom = (self._x, self._y))   # Rectangulo del jugador
 
-    @property
+    @property               # Getter de la imagen del jugador
     def image(self):
         return self._image
     
@@ -59,9 +59,9 @@ class Jugador(pygame.sprite.Sprite):        # Clase que hereda de Sprite (pygame
         self._image = self._jugador_walk[int(self._jugador_index)]
     
     @staticmethod
-    def player_input(event, player1, player2):                      # Metodo estatico para recibir input del jugador, ambos se mueven al mismo tiempo
+    def player_input(event, player1, player2):      # Metodo estatico para recibir input del jugador, ambos se mueven al mismo tiempo
         #=================== MOVIMIENTO ===================#
-        if event.key == pygame.K_DOWN:
+        if event.key == pygame.K_DOWN:              # Cada jugador se mueve hacia la direccion que se presione 
             player1.sprite.rect.y += 64
             player2.sprite.rect.y += 64
 
@@ -77,7 +77,7 @@ class Jugador(pygame.sprite.Sprite):        # Clase que hereda de Sprite (pygame
             player1.sprite.rect.x += 64
             player2.sprite.rect.x += 64
         
-        #=================== LIMITES PARA Y ===================#
+        #=================== LIMITES DEL MAPA EN Y ===================#
         if player1.sprite.rect.y  > 572:
             player1.sprite.rect.y = 572
         if player1.sprite.rect.y  < 60:
@@ -88,7 +88,7 @@ class Jugador(pygame.sprite.Sprite):        # Clase que hereda de Sprite (pygame
         if player2.sprite.rect.y  < 60:
             player2.sprite.rect.y = 60
 
-        #=================== LIMITES PARA X ===================#
+        #=================== LIMITES DEL MAPA EN X ===================#
         if player1.sprite.rect.x  > 532:
             player1.sprite.rect.x = 532
         if player1.sprite.rect.x  < 20:
@@ -99,7 +99,7 @@ class Jugador(pygame.sprite.Sprite):        # Clase que hereda de Sprite (pygame
         if player2.sprite.rect.x  < 616:
             player2.sprite.rect.x = 616
 
-    def restart(self):
+    def restart(self):            # Metodo para reiniciar la posicion de cada jugador
         if self._religion == 1:
             self._rect = self._image.get_rect(midbottom = (308, 380))
         else:

@@ -3,12 +3,12 @@ from obstaculo import Obstaculo
 
 class Movil(Obstaculo):
     def __init__(self, x, y, religion):
-        super().__init__(x, y, religion)
+        super().__init__(x, y, religion)    # Llama al constructor de la clase padre
 
-        self._tipo = "movil"
+        self._tipo = "movil"                # Define el tipo de obstaculo
         
-        self._start_x = self._x
-        self._start_y = self._y
+        self._start_x = self._x             # Guarda la posicion inicial del obstaculo, para poder reiniciarla
+        self._start_y = self._y             # Guarda la posicion inicial del obstaculo, para poder reiniciarla
 
         self.cargar_imagen()
 
@@ -23,7 +23,8 @@ class Movil(Obstaculo):
         self._rect = self._image.get_rect(midbottom = (self._x, self._y))
     
     def mover(self, pos_ant_jugador):
-        if pos_ant_jugador[1] > self._rect.y:
+        # Detecta la posicion del jugador a comparacion del obstaculo, y mueve el obstaculo correspondientemente
+        if pos_ant_jugador[1] > self._rect.y: 
             #ABAJO A ARRIBA
             self._rect.y -= 64
             
@@ -40,7 +41,8 @@ class Movil(Obstaculo):
             self._rect.x += 64
 
         ############LIMITES DE MOVIMIENTO DEL OBSTACULO############
-        if self._religion == 1:
+        # Los limites del mapa dependen de la religion del obstaculo
+        if self._religion == 1:         
             if self._rect.x  > 532:
                 self._rect.x = 532
 
@@ -66,5 +68,5 @@ class Movil(Obstaculo):
             if self._rect.y  < 60:
                 self._rect.y = 60
     
-    def restart(self):
+    def restart(self):                  # Metodo para reinicar la posicion del obstaculo
         self._rect = self._image.get_rect(midbottom = (self._start_x, self._start_y))
