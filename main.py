@@ -66,7 +66,7 @@ jugadores = [player1, player2]
 nivel = Nivel()
 
 # Lista de objetos de diferentes clases (todos son grupo por necesidades de pygame, pero cada grupo tiene diferentes clases)
-elementos = [nivel.paredes, nivel.metas, nivel.picos, nivel.movil1, nivel.movil2] 
+elementos = [nivel.estaticos, nivel.movil1, nivel.movil2]
 
 contador_fin = 0
 
@@ -92,51 +92,46 @@ while True:
     if game_active:
         #IMPRIME FONDO
         WIN.blit(fondo_surface, (0,0))
-            
 
         for elemento in elementos: # Se recorre la lista de objetos elementos
-            #=================== SE DIBUJAN TODOS LOS ELEMENTOS DEL NIVEL
-            elemento.draw(WIN)
-
-            #=================== DETECTA SI LLEGA A LA META
-            if (elemento == nivel.metas):
-                if (elemento.sprites()[0].collision(jugadores[0].sprite) and elemento.sprites()[1].collision(jugadores[1].sprite)):
-                    llego = True
-                    contador_fin += 1
-                    
-                    if contador_fin == 30: # 30 frames = 1/2 segundo, cuando el contador llega a 30, se pasa al siguiente nivel
-                        game_active = False
-
-            #=================== COLISION CON PARED
-            if elemento == nivel.paredes:
-                for i in range(len(nivel.paredes)):
-                    if (elemento.sprites()[i].collision(jugadores[0].sprite)):
-                        jugadores[0].sprite.rect.x = pos_ant1[0]
-                        jugadores[0].sprite.rect.y = pos_ant1[1]
-                    
-                    if (elemento.sprites()[i].collision(jugadores[1].sprite)):
-                        jugadores[1].sprite.rect.x = pos_ant2[0]
-                        jugadores[1].sprite.rect.y = pos_ant2[1]
+            elemento.draw(WIN) # Se dibujan todos los elementos del nivel
             
-            #=================== COLISION CON PICOS
-            if elemento == nivel.picos:
-                for i in range(len(nivel.picos)):
-                    if (elemento.sprites()[i].collision(jugadores[0].sprite) or elemento.sprites()[i].collision(jugadores[1].sprite)):
-                        jugadores[0].sprite.restart() # Se reinicia la posicion de los jugadores
-                        jugadores[1].sprite.restart()
+            #=================== INTERACCION CON ELEMENTOS ESTATICOS
+            if elemento == nivel.estaticos:
+                for i in range(len(nivel.estaticos)):
+                    #=================== DETECTA SI LLEGA A LA META
+                    if(elemento.sprites()[i].tipo == "meta"):
+                        if (elemento.sprites()[i].collision(jugadores[0].sprite) and elemento.sprites()[i + 1].collision(jugadores[1].sprite)):
+                            llego = True
+                            contador_fin += 1
+                            if contador_fin == 30: # 30 frames = 1/2 segundo, cuando el contador llega a 30, se pasa al siguiente nivel
+                                game_active = False
+                                Nivel.cont_nivel += 1
 
-                        elementos[3].sprite.restart() # Se reinicia la posicion de los moviles
-                        elementos[4].sprite.restart()
+                    #=================== COLISION CON PARED
+                    if(elemento.sprites()[i].tipo == "pared"):
+                        if (elemento.sprites()[i].collision(jugadores[0].sprite)):
+                            jugadores[0].sprite.rect.x = pos_ant1[0]
+                            jugadores[0].sprite.rect.y = pos_ant1[1]
+                        
+                        if (elemento.sprites()[i].collision(jugadores[1].sprite)):
+                            jugadores[1].sprite.rect.x = pos_ant2[0]
+                            jugadores[1].sprite.rect.y = pos_ant2[1]
+                    
+                    #=================== COLISION CON PICOS
+                    if(elemento.sprites()[i].tipo == "pico"):
+                        if (elemento.sprites()[i].collision(jugadores[0].sprite) or elemento.sprites()[i].collision(jugadores[1].sprite)):
+                            jugadores[0].sprite.restart() # Se reinicia la posicion de los jugadores
+                            jugadores[1].sprite.restart()
+
+                            #Reiniciar la posicion de los moviles
+                            nivel.movil1.sprite.restart()
+                            nivel.movil2.sprite.restart()
+
+                            elementos[1].sprite.restart() # Se reinicia la posicion de los moviles
+                            elementos[2].sprite.restart()
         
         """
-        #=================== COLISION CON PICOS
-        for i in range (len(picos)):
-            if(player1.sprite.rect.colliderect(picos.sprites()[i].rect) or player2.sprite.rect.colliderect(picos.sprites()[i].rect)):
-                player1.sprite.restart()
-                movil1.reiniciar()
-                player2.sprite.restart()
-                movil2.reiniciar()
-
         #=================== EMPUJAR MOVILES
         if(player1.sprite.collision(movil1)):
             movil1.mover(pos_ant1)
@@ -168,17 +163,10 @@ while True:
 
     else:
         game_active = True
-        Nivel.cont_nivel += 1
         contador_fin = 0
         llego = False
 
         #PLAYERS
-        """ # CREO QUE ESTO SOBRA
-        player1.remove(player1.sprite)
-        player2.remove(player2.sprite)
-        player1.add(Jugador(1))
-        player2.add(Jugador(2))
-        """
         for player in jugadores:
             player.sprite.restart()
 

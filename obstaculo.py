@@ -19,6 +19,10 @@ class Obstaculo(pygame.sprite.Sprite, ABC):         # Clase abstracta que hereda
             return True
 
     @property
+    def tipo(self):
+        return self._tipo
+
+    @property
     def image(self):
         return self._image
 
