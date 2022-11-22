@@ -1,47 +1,45 @@
 import pygame
 from jugador import Jugador
 from nivel import Nivel
-
 from sys import exit
 
 ##========================================# INICIALIZACION #================================================#
 
-pygame.init()
+pygame.init()                                   # Inicializacion de pygame
 
-WIDTH, HEIGHT = 1212, 656
-WIN = pygame.display.set_mode((WIDTH,HEIGHT))
+WIDTH, HEIGHT = 1212, 656                       # Dimensiones de la ventana
+WIN = pygame.display.set_mode((WIDTH,HEIGHT))   # Creacion de la ventana
 
-pygame.display.set_caption("YOLIA")
+pygame.display.set_caption("YOLIA")             # Titulo de la ventana en windows
 
-clock = pygame.time.Clock()
+clock = pygame.time.Clock()                     # Inicializacion del reloj para el tiempo de ejecucion
 
 ##========================================# MUSICA #========================================================#
 
-# pygame.mixer.init()
-# pygame.mixer.music.load("music/musica.wav")
-# pygame.mixer.music.play(-1)
+pygame.mixer.init()                           # Inicializacion de mixer para la musica
+pygame.mixer.music.load("music/musica.wav")   # Carga el archivo de musica
+pygame.mixer.music.play(-1)                   # Reproduce de la musica en bucle
 
 ##========================================# CARGA DE FUENTE Y FONDO #=======================================#
 
-text_font = pygame.font.Font('fonts/I-pixel-u.ttf', 64)
-fondo_surface = pygame.image.load('assets/Fondos/FondoMarco.png').convert()
+text_font = pygame.font.Font('fonts/I-pixel-u.ttf', 64)                     # Carga la fuente del texto
+fondo_surface = pygame.image.load('assets/Fondos/FondoMarco.png').convert() # Carga la imagen del fondo
 fondo_surface = pygame.transform.scale2x(fondo_surface)
 
 ##========================================# PANTALLA DE TITULO #============================================#
 
-titulo_surface = pygame.image.load("assets/fondo.png").convert()
-final_surface = pygame.image.load("assets/final.png").convert()
+titulo_surface = pygame.image.load("assets/fondo.png").convert() # Carga imagen de fondo
 
-menu = True
+menu = True 
 
-while menu == True:
-    WIN.blit(titulo_surface, (0,0))
-    pygame.display.update()
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
+while menu == True: # Mientras el menu este activo
+    WIN.blit(titulo_surface, (0,0))         # Dibuja la pantalla de titulo
+    pygame.display.update()                 # Actualiza la pantalla
+    for event in pygame.event.get():    
+        if event.type == pygame.QUIT:       # Si se presiona la X de la ventana, se cierra el juego
             pygame.quit()
             exit()
-        if event.type == pygame.KEYDOWN:
+        if event.type == pygame.KEYDOWN:    # Si se presiona cualquier tecla, se sale del menu y se inicia el juego
             if event.key == pygame.K_SPACE:
                 menu = False
                 game_active = True
@@ -49,26 +47,25 @@ while menu == True:
 
 ##========================================# PLAYERS #======================================================#
 
-player1 = pygame.sprite.GroupSingle()
-player1.add(Jugador(1))
+player1 = pygame.sprite.GroupSingle()   # Se instancia un grupo single de sprites para el jugador 1, por la forma en que pygame maneja los sprites
+player1.add(Jugador(1))                 # Se agrega el sprite del jugador 1 al grupo
 
-player2 = pygame.sprite.GroupSingle()
-player2.add(Jugador(2))
+player2 = pygame.sprite.GroupSingle()   # Se instancia un grupo single de sprites para el jugador 2, por la forma en que pygame maneja los sprites
+player2.add(Jugador(2))                 # Se agrega el sprite del jugador 2 al grupo
 
 #Lista de objetos de tipo jugador, que a la vez son group single por necesidad de pygame
 jugadores = [player1, player2]
 
 ##=======================================# CONTADORES Y LIMITANTES #=======================================#
 
-nivel = Nivel()
+nivel = Nivel()         # Se instancia al objeto de tipo nivel
 
 # Lista de objetos de diferentes clases (todos son grupo por necesidades de pygame, pero cada grupo tiene diferentes clases)
 elementos = [nivel.estaticos, nivel.movil1, nivel.movil2]
 
-contador_fin = 0
-
-game_active = False
-llego = False
+game_active = False     # Variable que controla si el juego esta activo o no
+llego = False           # Variable que controla si el jugador llego a la meta o no, para detener los inputs
+contador_fin = 0        # Contador para detener el juego desde que se llega a la meta hasta que se pasa de nivel
 
 ##========================================# LOOP DEL JUEGO #===============================================#
 
@@ -104,10 +101,12 @@ while True:
 
                     #=================== COLISION CON PARED
                     if(elemento.sprites()[i].tipo == "pared"):
+                        # Si el jugador 1 colisiona con una pared, se devuelve a su posicion anterior
                         if (elemento.sprites()[i].collision(jugadores[0].sprite)):
                             jugadores[0].sprite.rect.x = pos_ant1[0]
                             jugadores[0].sprite.rect.y = pos_ant1[1]
                         
+                        # Si el jugador 2 colisiona con una pared, se devuelve a su posicion anterior
                         if (elemento.sprites()[i].collision(jugadores[1].sprite)):
                             jugadores[1].sprite.rect.x = pos_ant2[0]
                             jugadores[1].sprite.rect.y = pos_ant2[1]
@@ -118,15 +117,15 @@ while True:
                             jugadores[0].sprite.restart() # Se reinicia la posicion de los jugadores
                             jugadores[1].sprite.restart()
 
-                            # Reiniciar la posicion de los moviles
+                            # Reinicia la posicion de los moviles
                             if nivel.movil1 and nivel.movil2:
                                 elementos[1].sprite.restart()
                                 elementos[2].sprite.restart()
             else:
                 #=================== EMPUJAR MOVILES
-                if nivel.movil1 and nivel.movil2:
-                    if(elementos[1].sprite.collision(jugadores[0].sprite)):
-                        movil1_ant = (elementos[1].sprite.rect.x, elementos[1].sprite.rect.y) # Se guarda la posicion anterior del movil1 antes de moverlo
+                if nivel.movil1 and nivel.movil2:   # Si hay moviles en el nivel
+                    if(elementos[1].sprite.collision(jugadores[0].sprite)):                     # Si el jugador 1 colisiona con el movil 1
+                        movil1_ant = (elementos[1].sprite.rect.x, elementos[1].sprite.rect.y)   # Se guarda la posicion anterior del movil1 antes de moverlo
 
                         elementos[1].sprite.mover(pos_ant1) # Se mueve el movil1
 
@@ -136,8 +135,8 @@ while True:
                         if (player1.sprite.rect.y + 64 > 572 or player1.sprite.rect.y - 64 < 60):
                             player1.sprite.rect.y = pos_ant1[1]
 
-                    if(elementos[2].sprite.collision(jugadores[1].sprite)):
-                        movil2_ant = (elementos[2].sprite.rect.x, elementos[2].sprite.rect.y) # Se guarda la posicion anterior del movil2 antes de moverlo
+                    if(elementos[2].sprite.collision(jugadores[1].sprite)):                     # Si el jugador 2 colisiona con el movil 2
+                        movil2_ant = (elementos[2].sprite.rect.x, elementos[2].sprite.rect.y)   # Se guarda la posicion anterior del movil2 antes de moverlo
 
                         elementos[2].sprite.mover(pos_ant2) # Se mueve el movil2
 
@@ -193,8 +192,9 @@ while True:
         if Nivel.cont_nivel == 4:
             nivel.nivel4()
         if Nivel.cont_nivel == 5:       # Si el contador de nivel es 5, se termina el juego
-            WIN.blit(final_surface, (0,0))
-            game_active = False
+            final_surface = pygame.image.load("assets/final.png").convert() # Carga imagen de fondo
+            WIN.blit(final_surface, (0,0))                                  # Dibuja imagen de fondo
+            game_active = False                                             # Se desactiva el juego
 
     pygame.display.update()
     clock.tick(60)
