@@ -39,21 +39,8 @@ class Movil(Obstaculo):
             #EMPUJA A LA DERECHA
             self._rect.x += 64
 
-        ############LIMITES############
+        ############LIMITES DE MOVIMIENTO DEL OBSTACULO############
         if self._religion == 1:
-            if self._rect.x  > 1128:
-                self._rect.x = 1128
-
-            if self._rect.x  < 616:
-                self._rect.x = 616
-
-            if self._rect.y  > 572:
-                self._rect.y = 572
-
-            if self._rect.y  < 60:
-                self._rect.y = 60
-        
-        else:
             if self._rect.x  > 532:
                 self._rect.x = 532
 
@@ -63,6 +50,19 @@ class Movil(Obstaculo):
             if self._rect.y  > 572:
                 self._rect.y = 572
                 
+            if self._rect.y  < 60:
+                self._rect.y = 60
+
+        elif self._religion == 2:
+            if self._rect.x  > 1128:
+                self._rect.x = 1128
+
+            if self._rect.x  < 616:
+                self._rect.x = 616
+
+            if self._rect.y  > 572:
+                self._rect.y = 572
+
             if self._rect.y  < 60:
                 self._rect.y = 60
     

@@ -17,9 +17,9 @@ clock = pygame.time.Clock()
 
 ##========================================# MUSICA #========================================================#
 
-pygame.mixer.init()
-pygame.mixer.music.load("music/musica.wav")
-pygame.mixer.music.play(-1)
+# pygame.mixer.init()
+# pygame.mixer.music.load("music/musica.wav")
+# pygame.mixer.music.play(-1)
 
 ##========================================# CARGA DE FUENTE Y FONDO #=======================================#
 
@@ -30,14 +30,12 @@ fondo_surface = pygame.transform.scale2x(fondo_surface)
 ##========================================# PANTALLA DE TITULO #============================================#
 
 titulo_surface = pygame.image.load("assets/fondo.png").convert()
-nombre_surface = pygame.image.load("assets/Titulo.png").convert()
-nombre_surface = pygame.transform.scale2x(nombre_surface)
+final_surface = pygame.image.load("assets/final.png").convert()
 
 menu = True
 
 while menu == True:
     WIN.blit(titulo_surface, (0,0))
-    WIN.blit(nombre_surface, (200,50))
     pygame.display.update()
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -47,7 +45,6 @@ while menu == True:
             if event.key == pygame.K_SPACE:
                 menu = False
                 game_active = True
-                Nivel.cont_nivel = 1
                 break
 
 ##========================================# PLAYERS #======================================================#
@@ -72,8 +69,6 @@ contador_fin = 0
 
 game_active = False
 llego = False
-
-WIN.blit(nombre_surface, (200,50))
 
 ##========================================# LOOP DEL JUEGO #===============================================#
 
@@ -102,11 +97,10 @@ while True:
                     #=================== DETECTA SI LLEGA A LA META
                     if(elemento.sprites()[i].tipo == "meta"):
                         if (elemento.sprites()[i].collision(jugadores[0].sprite) and elemento.sprites()[i + 1].collision(jugadores[1].sprite)):
-                            llego = True
-                            contador_fin += 1
-                            if contador_fin == 30: # 30 frames = 1/2 segundo, cuando el contador llega a 30, se pasa al siguiente nivel
-                                game_active = False
-                                Nivel.cont_nivel += 1
+                            llego = True                # Si ambos jugadores llegan a la meta, no puede moverse hasta pasar al siguiente nivel
+                            contador_fin += 1           # Se cuenta un tiempo de espera para pasar de nivel
+                            if contador_fin == 30:      # 30 frames = 1/2 segundo, cuando el contador llega a 30, se pasa al siguiente nivel
+                                game_active = False     # Se desactiva el juego, para pasar de nivel
 
                     #=================== COLISION CON PARED
                     if(elemento.sprites()[i].tipo == "pared"):
@@ -132,42 +126,65 @@ while True:
                 #=================== EMPUJAR MOVILES
                 if nivel.movil1 and nivel.movil2:
                     if(elementos[1].sprite.collision(jugadores[0].sprite)):
-                        elementos[1].sprite.mover(pos_ant1)
+                        movil1_ant = (elementos[1].sprite.rect.x, elementos[1].sprite.rect.y) # Se guarda la posicion anterior del movil1 antes de moverlo
 
-                        if (player1.sprite.rect.x + 64 > 532 or player1.sprite.rect.x - 64 < 20):
+                        elementos[1].sprite.mover(pos_ant1) # Se mueve el movil1
+
+                        # Si el movil1 colisiona con una pared, el jugador1 vuelve a su posicion anterior
+                        if (player1.sprite.rect.x + 64 > 532 or player1.sprite.rect.x - 64 < 20): 
                             player1.sprite.rect.x = pos_ant1[0]
                         if (player1.sprite.rect.y + 64 > 572 or player1.sprite.rect.y - 64 < 60):
                             player1.sprite.rect.y = pos_ant1[1]
 
                     if(elementos[2].sprite.collision(jugadores[1].sprite)):
-                        elementos[2].sprite.mover(pos_ant2)
+                        movil2_ant = (elementos[2].sprite.rect.x, elementos[2].sprite.rect.y) # Se guarda la posicion anterior del movil2 antes de moverlo
 
+                        elementos[2].sprite.mover(pos_ant2) # Se mueve el movil2
+
+                        # Si el movil2 se sale del mapa, el jugador1 vuelve a su posicion anterior
                         if (player2.sprite.rect.x + 64 > 1128 or player2.sprite.rect.x - 64 < 616):
                             player2.sprite.rect.x = pos_ant2[0]
                         if (player2.sprite.rect.y + 64 > 572 or player2.sprite.rect.y - 64 < 60):
                             player2.sprite.rect.y = pos_ant2[1]
 
-        #=================== DIBUJA JUGADORES
+                    # Si cualquier movil colisiona con un pico o una pared, se vuelve a su posicion anterior y el jugador vuelve a su posicion anterior
+                    for barrera in elementos:
+                        for i in range(len(barrera)):
+                            if (barrera.sprites()[i].tipo == "pico" or barrera.sprites()[i].tipo == "pared"):
+                                if (elementos[1].sprite.collision(barrera.sprites()[i])):
+                                    elementos[1].sprite.rect.x = movil1_ant[0]
+                                    elementos[1].sprite.rect.y = movil1_ant[1]
+                                    jugadores[0].sprite.rect.x = pos_ant1[0]
+                                    jugadores[0].sprite.rect.y = pos_ant1[1]
+                                
+                                if (elementos[2].sprite.collision(barrera.sprites()[i])):
+                                    elementos[2].sprite.rect.x = movil2_ant[0]
+                                    elementos[2].sprite.rect.y = movil2_ant[1]
+                                    jugadores[1].sprite.rect.x = pos_ant2[0]
+                                    jugadores[1].sprite.rect.y = pos_ant2[1]
+
+        #=================== DIBUJA A LOS JUGADORES
         for player in jugadores:
             player.draw(WIN)
             player.sprite.animation_state()
         
-        #=================== DIBUJA TITULO
+        #=================== DIBUJA TITULO ARRIBA
         text_font = pygame.font.Font('fonts/I-pixel-u.ttf', 60)
-        text_surface = text_font.render('YOLIA', False, 'Black')
+        text_surface = text_font.render('YOLIA', False, 'White')
         text_rectangle = text_surface.get_rect(center = (WIDTH/2, 25))
         WIN.blit(text_surface, text_rectangle)
 
-    else:
-        game_active = True
-        contador_fin = 0
+    else: # Si el juego no esta activo, se pasa al siguiente nivel
+        Nivel.cont_nivel += 1           # Se aumenta el contador de nivel
+        if Nivel.cont_nivel < 5:        # Si el contador de nivel es menor a 5, el juego sigue
+            game_active = True          # Se vuelve a activar el juego
+        contador_fin = 0                # Se reinicia el contador de frames en la meta
         llego = False
 
-        #PLAYERS
-        for player in jugadores:
+        for player in jugadores:        # Se reinicia la posicion de los jugadores
             player.sprite.restart()
 
-        if Nivel.cont_nivel == 1:
+        if Nivel.cont_nivel == 1:       # Se activa el nivel correspondiente
             nivel.nivel1()
         if Nivel.cont_nivel == 2:
             nivel.nivel2()
@@ -175,8 +192,9 @@ while True:
             nivel.nivel3()
         if Nivel.cont_nivel == 4:
             nivel.nivel4()
-        if Nivel.cont_nivel == 5:
-            WIN.blit(titulo_surface, (0,0))
+        if Nivel.cont_nivel == 5:       # Si el contador de nivel es 5, se termina el juego
+            WIN.blit(final_surface, (0,0))
+            game_active = False
 
     pygame.display.update()
     clock.tick(60)
