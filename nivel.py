@@ -4,15 +4,22 @@ from meta import Meta
 from pico import Pico
 from movil import Movil
 
-class Nivel(object):
+class Nivel(object):                                # Clase compuesta por una lista de objetos de diferentes tipos, que instancian cada nivel
     def __init__(self):
-        self._paredes = pygame.sprite.Group()
-        self._metas = pygame.sprite.Group()
+        self._estaticos = pygame.sprite.Group()     # Grupo de objetos estaticos
+
+        self._paredes = pygame.sprite.Group()       # Estos obstaculos se pueden agrupar ya que se comportan igual todos los elementos del mismo grupo
+        self._metas = pygame.sprite.Group()         # Los grupos funcionan como listas de objetos, pero con funciones de pygame para manejarlas
         self._picos = pygame.sprite.Group()
-        self._movil1 = pygame.sprite.GroupSingle()  # El moimiento es indepentiente por cada objeto, debe de estar en un grupo unico
-        self._movil2 = pygame.sprite.GroupSingle()  # ^^^
+        self._movil1 = pygame.sprite.GroupSingle()  # Los obstaculos "movil" tiene un movimiento indepentiente por cada objeto, deben de estar en grupos single
+        self._movil2 = pygame.sprite.GroupSingle()
 
     @property
+    def estaticos(self):
+        return self._estaticos
+
+    
+    @property                   # Getters de los grupos de diferentes obstaculos a instanciarse en cada nivel
     def paredes(self):
         return self._paredes
 
@@ -25,10 +32,14 @@ class Nivel(object):
         return self._picos
     
     @property
-    def moviles(self):
-        return self._moviles
+    def movil1(self):
+        return self._movil1
 
-    def nivel1(self):
+    @property
+    def movil2(self):
+        return self._movil2
+
+    def nivel1(self):           # Definicion de cada uno de los 4 niveles
         self._metas.empty()
         self._metas.add(Meta(20 + (64 * 8) - 32, 60 + (64 * 9), 1))
         self._metas.add(Meta(616 + (64 * 8) - 32, 60 + (64 * 9), 2))

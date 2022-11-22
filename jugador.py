@@ -1,23 +1,23 @@
 import pygame
 
-class Jugador(pygame.sprite.Sprite):
+class Jugador(pygame.sprite.Sprite):        # Clase que hereda de Sprite (pygame) para definir a cada jugador
     def __init__(self, religion):
         super().__init__()
 
-        self._religion = religion
+        self._religion = religion           # Religion del jugador
 
-        if self._religion == 1:
+        if self._religion == 1:             # Posicion inicial del jugador, dependiendo de su religion
             self._x = 308
             self._y = 380
         else:
             self._x = 904
             self._y = 380
 
-        self.cargar_imagen()
+        self.cargar_imagen()                # Carga la imagen del jugador
 
-    def cargar_imagen(self):
+    def cargar_imagen(self):                # Metodo para cargar la imagen al sprite, dependiendo de la religion del jugador
         #==================== MEXICA ====================#
-        if self._religion == 1:
+        if self._religion == 1: 
             jugador1 = pygame.transform.scale2x(pygame.image.load('assets/uglyAssMofo2/Canek1.png').convert_alpha())
             jugador2 = pygame.transform.scale2x(pygame.image.load('assets/uglyAssMofo2/Canek2.png').convert_alpha())
             jugador3 = pygame.transform.scale2x(pygame.image.load('assets/uglyAssMofo2/Canek3.png').convert_alpha())
@@ -38,62 +38,70 @@ class Jugador(pygame.sprite.Sprite):
             jugador7 = pygame.transform.scale2x(pygame.image.load('assets/uglyAssMofo/Sprite-0010.png').convert_alpha())
             jugador8 = pygame.transform.scale2x(pygame.image.load('assets/uglyAssMofo/Sprite-0011.png').convert_alpha())
         
-        self._jugador_walk = [jugador1, jugador2, jugador3, jugador4, jugador5, jugador6, jugador7, jugador8]
+        self._jugador_walk = [jugador1, jugador2, jugador3, jugador4, jugador5, jugador6, jugador7, jugador8]   # Lista con las imagenes del jugador (caminando)
         
-        self._jugador_index = 0
-        self._image = self.jugadorWalk[self._jugador_index]
-        self._rect = self._image.get_rect(midbottom = (self._x, self._y))
+        self._jugador_index = 0                                 # Indice de la lista de imagenes del jugador
+        self._image = self._jugador_walk[self._jugador_index]     # Imagen actual del jugador
+        self._rect = self._image.get_rect(midbottom = (self._x, self._y))   # Rectangulo del jugador
 
-    def animation_state(self):
-        self.jugador_index += 0.1
-        if self.jugador_index >= len(self.jugadorWalk):
-            self.jugador_index = 0
-        self.image = self.jugadorWalk[int(self.jugador_index)]
+    @property
+    def image(self):
+        return self._image
+    
+    @property               # Getter del rectangulo del jugador
+    def rect(self):
+        return self._rect
+
+    def animation_state(self):      # Metodo para cambiar la imagen del jugador, mostrando la animaciOn de caminar
+        self._jugador_index += 0.1
+        if self._jugador_index >= len(self._jugador_walk):
+            self._jugador_index = 0
+        self._image = self._jugador_walk[int(self._jugador_index)]
     
     @staticmethod
-    def player_input(event, player1, player2):                      # Metodo estatic para recobor movimiento del jugadoro
+    def player_input(event, player1, player2):                      # Metodo estatico para recibir input del jugador, ambos se mueven al mismo tiempo
         #=================== MOVIMIENTO ===================#
         if event.key == pygame.K_DOWN:
-            player1.sprite.rect._y += 64
-            player2.sprite.rect._y += 64
+            player1.sprite.rect.y += 64
+            player2.sprite.rect.y += 64
 
         if event.key == pygame.K_UP:
-            player1.sprite.rect._y -= 64
-            player2.sprite.rect._y -= 64
+            player1.sprite.rect.y -= 64
+            player2.sprite.rect.y -= 64
 
         if event.key == pygame.K_LEFT:
-            player1.sprite.rect._x -= 64
-            player2.sprite.rect._x -= 64
+            player1.sprite.rect.x -= 64
+            player2.sprite.rect.x -= 64
 
         if event.key == pygame.K_RIGHT:
-            player1.sprite.rect._x += 64
-            player2.sprite.rect._x += 64
+            player1.sprite.rect.x += 64
+            player2.sprite.rect.x += 64
         
         #=================== LIMITES PARA Y ===================#
-        if player1.sprite.rect._y  > 572:
-            player1.sprite.rect._y = 572
-        if player1.sprite.rect._y  < 60:
-            player1.sprite.rect._y = 60
+        if player1.sprite.rect.y  > 572:
+            player1.sprite.rect.y = 572
+        if player1.sprite.rect.y  < 60:
+            player1.sprite.rect.y = 60
 
-        if player2.sprite.rect._y  > 572:
-            player2.sprite.rect._y = 572 
-        if player2.sprite.rect._y  < 60:
-            player2.sprite.rect._y = 60
+        if player2.sprite.rect.y  > 572:
+            player2.sprite.rect.y = 572 
+        if player2.sprite.rect.y  < 60:
+            player2.sprite.rect.y = 60
 
         #=================== LIMITES PARA X ===================#
-        if player1.sprite.rect._x  > 532:
-            player1.sprite.rect._x = 532
-        if player1.sprite.rect._x  < 20:
-            player1.sprite.rect._x = 20
+        if player1.sprite.rect.x  > 532:
+            player1.sprite.rect.x = 532
+        if player1.sprite.rect.x  < 20:
+            player1.sprite.rect.x = 20
 
-        if player2.sprite.rect._x  > 1128:
-            player2.sprite.rect._x = 1128 
-        if player2.sprite.rect._x  < 616:
-            player2.sprite.rect._x = 616
+        if player2.sprite.rect.x  > 1128:
+            player2.sprite.rect.x = 1128 
+        if player2.sprite.rect.x  < 616:
+            player2.sprite.rect.x = 616
 
     def restart(self):
         if self._religion == 1:
-            self.rect = self.image.get_rect(midbottom = (308, 380))
+            self._rect = self._image.get_rect(midbottom = (308, 380))
         else:
-            self.rect = self.image.get_rect(midbottom = (904, 380))
+            self._rect = self._image.get_rect(midbottom = (904, 380))
 

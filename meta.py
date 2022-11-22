@@ -2,8 +2,8 @@ import pygame
 from obstaculo import Obstaculo
 
 class Meta(Obstaculo):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, x, y, religion):
+        super().__init__(x, y, religion)
 
         self._tipo = "meta"
 

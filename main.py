@@ -58,9 +58,15 @@ player1.add(Jugador(1))
 player2 = pygame.sprite.GroupSingle()
 player2.add(Jugador(2))
 
+#Lista de objetos de tipo jugador, que a la vez son group single por necesidad de pygame
+jugadores = [player1, player2]
+
 ##=======================================# CONTADORES Y LIMITANTES #=======================================#
 
 nivel = Nivel()
+
+# Lista de objetos de diferentes clases (todos son grupo por necesidades de pygame, pero cada grupo tiene diferentes clases)
+elementos = [nivel.paredes, nivel.metas, nivel.picos, nivel.movil1, nivel.movil2] 
 
 cont_nivel = 0
 contador_fin = 0
@@ -80,23 +86,59 @@ while True:
 
         #DETECTAR TECLAS
         if (event.type == pygame.KEYDOWN and llego == False):
-            pos_ant1 = (player1.sprite.rect.x, player1.sprite.rect.y)
-            pos_ant2 = (player2.sprite.rect.x, player2.sprite.rect.y)
-            Jugador.playerInput(event, player1, player2)
+            pos_ant1 = (jugadores[0].sprite.rect.x, jugadores[0].sprite.rect.y)
+            pos_ant2 = (jugadores[1].sprite.rect.x, jugadores[1].sprite.rect.y)
+            Jugador.player_input(event, jugadores[0], jugadores[1])
 
     if game_active:
         #IMPRIME FONDO
         WIN.blit(fondo_surface, (0,0))
+            
+
+        for elemento in elementos: # Se recorre la lista de objetos elementos
+            #=================== SE DIBUJAN TODOS LOS ELEMENTOS DEL NIVEL
+            elemento.draw(WIN)
+
+            #=================== DETECTA SI LLEGA A LA META
+            if (elemento == nivel.metas):
+                if (elemento.sprites()[0].collision(jugadores[0].sprite) and elemento.sprites()[1].collision(jugadores[1].sprite)):
+                    llego = True
+                    contador_fin += 1
+                    
+                    if contador_fin == 30: # 30 frames = 1/2 segundo, cuando el contador llega a 30, se pasa al siguiente nivel
+                        game_active = False
+
+            #=================== COLISION CON PARED
+            if elemento == nivel.paredes:
+                for i in range(len(nivel.paredes)):
+                    if (elemento.sprites()[i].collision(jugadores[0].sprite)):
+                        jugadores[0].sprite.rect.x = pos_ant1[0]
+                        jugadores[0].sprite.rect.y = pos_ant1[1]
+                    
+                    if (elemento.sprites()[i].collision(jugadores[1].sprite)):
+                        jugadores[1].sprite.rect.x = pos_ant2[0]
+                        jugadores[1].sprite.rect.y = pos_ant2[1]
+            
+            #=================== COLISION CON PICOS
+            if elemento == nivel.picos:
+                for i in range(len(nivel.picos)):
+                    if (elemento.sprites()[i].collision(jugadores[0].sprite) or elemento.sprites()[i].collision(jugadores[1].sprite)):
+                        jugadores[0].sprite.restart() # Se reinicia la posicion de los jugadores
+                        jugadores[1].sprite.restart()
+
+                        elementos[3].sprite.restart() # Se reinicia la posicion de los moviles
+                        elementos[4].sprite.restart()
         
-        #IMPRIME METAS
-        WIN.blit(meta1.image, meta1.rect)
-        WIN.blit(meta2.image, meta2.rect)
+        """
+        #=================== COLISION CON PICOS
+        for i in range (len(picos)):
+            if(player1.sprite.rect.colliderect(picos.sprites()[i].rect) or player2.sprite.rect.colliderect(picos.sprites()[i].rect)):
+                player1.sprite.restart()
+                movil1.reiniciar()
+                player2.sprite.restart()
+                movil2.reiniciar()
 
-        #IMPRIME MOVILES
-        WIN.blit(movil1.image, movil1.rect)
-        WIN.blit(movil2.image, movil2.rect)
-
-        #EMPUJAR MOVILES
+        #=================== EMPUJAR MOVILES
         if(player1.sprite.collision(movil1)):
             movil1.mover(pos_ant1)
 
@@ -112,52 +154,16 @@ while True:
                 player2.sprite.rect.x = pos_ant2[0]
             if (player2.sprite.rect.y + 64 > 572 or player2.sprite.rect.y - 64 < 60):
                 player2.sprite.rect.y = pos_ant2[1]
-                
+        """
 
-        #DIBUJA PICOS
-        picos.draw(WIN)
-
-        #DIBUJA PAREDES
-        paredes.draw(WIN)
-
-        #DETECTA SI LLEGA A LA META
-        if (player1.sprite.llega_meta(obstaculos) and player2.sprite.llega_meta(meta2)):
-            llego = True
-            contador_fin += 1
-
-        if contador_fin == 30:
-            game_active = False                
-
-        #=================== COLISION CON PICOS
-
-        for i in range (len(picos)):
-            if(player1.sprite.rect.colliderect(picos.sprites()[i].rect) or player2.sprite.rect.colliderect(picos.sprites()[i].rect)):
-                player1.sprite.restart()
-                movil1.reiniciar()
-                player2.sprite.restart()
-                movil2.reiniciar()
-
-        #=================== COLISION CON PARED
-
-        for i in range (len(paredes)):
-            if(player1.sprite.rect.colliderect(paredes.sprites()[i].rect)):
-                player1.sprite.rect.x = pos_ant1[0]
-                player1.sprite.rect.y = pos_ant1[1]
-            
-            if(player2.sprite.rect.colliderect(paredes.sprites()[i].rect)):
-                player2.sprite.rect.x = pos_ant2[0]
-                player2.sprite.rect.y = pos_ant2[1]
-
-        # MANTENERLOS AL FINAL DEL CICLO
-        player1.draw(WIN)
-        player1.animation_state()
+        #=================== DIBUJA JUGADORES
+        for player in jugadores:
+            player.draw(WIN)
+            player.sprite.animation_state()
         
-        player2.draw(WIN)
-        player2.animation_state()
-
+        #=================== DIBUJA TITULO
         text_font = pygame.font.Font('fonts/I-pixel-u.ttf', 60)
         text_surface = text_font.render('YOLIA', False, 'Black')
-
         text_rectangle = text_surface.get_rect(center = (WIDTH/2, 25))
         WIN.blit(text_surface, text_rectangle)
 
@@ -174,18 +180,17 @@ while True:
         player1.add(Jugador(1))
         player2.add(Jugador(2))
         """
-
-        player1.sprite.restart()
-        player2.sprite.restart()
+        for player in jugadores:
+            player.sprite.restart()
 
         if cont_nivel == 1:
-            nivel.cont_nivel1()
+            nivel.nivel1()
         if cont_nivel == 2:
-            nivel.cont_nivel2()
+            nivel.nivel2()
         if cont_nivel == 3:
-            nivel.cont_nivel3()
+            nivel.nivel3()
         if cont_nivel == 4:
-            nivel.cont_nivel4()
+            nivel.nivel4()
         if cont_nivel == 5:
             WIN.blit(titulo_surface, (0,0))
 

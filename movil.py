@@ -2,8 +2,8 @@ import pygame
 from obstaculo import Obstaculo
 
 class Movil(Obstaculo):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, x, y, religion):
+        super().__init__(x, y, religion)
 
         self._tipo = "movil"
         
@@ -66,5 +66,5 @@ class Movil(Obstaculo):
             if self._rect.y  < 60:
                 self._rect.y = 60
     
-    def reiniciar(self):
+    def restart(self):
         self._rect = self._image.get_rect(midbottom = (self._start_x, self._start_y))
