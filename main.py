@@ -28,7 +28,7 @@ fondo_surface = pygame.transform.scale2x(fondo_surface)
 
 ##========================================# PANTALLA DE TITULO #============================================#
 
-titulo_surface = pygame.image.load("assets/fondo.png").convert() # Carga imagen de fondo
+titulo_surface = pygame.image.load("assets/inicio.png").convert() # Carga imagen de fondo
 
 menu = True 
 
