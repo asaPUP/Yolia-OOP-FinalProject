@@ -196,6 +196,6 @@ while True:
             WIN.blit(final_surface, (0,0))                                  # Dibuja imagen de fondo
             game_active = False                                             # Se desactiva el juego
 
-    pygame.display.update()
-    clock.tick(60)
+    pygame.display.update()     # Actualiza la pantalla
+    clock.tick(60)              # Fija los FPS en 60
     
