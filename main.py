@@ -16,13 +16,11 @@ pygame.display.set_caption("YOLIA")
 clock = pygame.time.Clock()
 
 ##========================================# MUSICA #========================================================#
-"""
-"""
+
 pygame.mixer.init()
 pygame.mixer.music.load("music/musica.wav")
 pygame.mixer.music.play(-1)
-"""
-"""
+
 ##========================================# CARGA DE FUENTE Y FONDO #=======================================#
 
 text_font = pygame.font.Font('fonts/I-pixel-u.ttf', 64)
