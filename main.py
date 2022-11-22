@@ -17,9 +17,11 @@ clock = pygame.time.Clock()
 
 ##========================================# MUSICA #========================================================#
 """
+"""
 pygame.mixer.init()
 pygame.mixer.music.load("music/musica.wav")
 pygame.mixer.music.play(-1)
+"""
 """
 ##========================================# CARGA DE FUENTE Y FONDO #=======================================#
 
